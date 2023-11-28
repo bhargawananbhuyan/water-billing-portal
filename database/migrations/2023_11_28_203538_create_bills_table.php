@@ -10,14 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role', ['consumer', 'provider'])->default('consumer');
-            $table->rememberToken();
+            $table->foreignId('provider_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('consumer_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->float('amount');
+            $table->enum('status', ['unpaid', 'paid'])->default('unpaid');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('bills');
     }
 };
